@@ -1,5 +1,8 @@
 resource "aws_s3_bucket" "s3_output_bucket" {
     bucket = var.s3_output_bucket
+    tags = {
+        component = var.component_tag
+    }
 }
 
 resource "aws_s3_bucket_public_access_block" "metrics_bucket_block_public" {
