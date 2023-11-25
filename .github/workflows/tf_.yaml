@@ -1,0 +1,59 @@
+name: Infrastructure Deploy using terraform
+on:
+  workflow_dispatch:
+    inputs:
+       ACTION:
+        description: 'Choose operation'
+        required: true
+        type: choice
+        options: 
+          - Bucket_Policy_enforce
+          
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read
+
+env:
+  REGION: us-east-1
+
+jobs:
+  Bucket_policy_enforce:
+    if: ${{ github.event.inputs.ACTION == 'Bucket_Policy_enforce' }}
+    name: Create Metrics Infrastructure Devl
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+        
+      - name: get_aws_credentials_devl
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "arn:aws:iam::875067281875:role/awsgharole"
+          aws-region: "us-east-1"
+
+      - name: check identity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.3.2
+
+      - name: Verify Terraform version
+        working-directory: terraform
+        run: terraform --version
+          
+      - name: Terraform init
+        working-directory: terraform
+        run: terraform init -backend-config='bucket=aws-terrafrom-automation-statefiles'
+        
+      - name: Terraform validation
+        working-directory: terraform
+        run: terraform validate
+      
+      - name: Terraform plan
+        working-directory: terraform
+        run: terraform plan -var-file devl.tfvars --out=tfplan
+
+      # - name: Terraform apply
+      #   working-directory: terraform
+      #   run: terraform apply tfplan
