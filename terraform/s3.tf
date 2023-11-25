@@ -45,5 +45,5 @@ resource "aws_s3_bucket_ownership_controls" "bucket_ownership" {
 
 resource "aws_s3_bucket_policy" "tls_enfore" {
     bucket = aws_s3_bucket.s3_output_bucket.id
-    policy = data.aws_iam_policy_document.tls_enfore_poli.json
+    policy = data.aws_iam_policy_document.tls_enfore_policy.json
 }
