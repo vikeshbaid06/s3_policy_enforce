@@ -50,9 +50,9 @@ jobs:
         working-directory: terraform
         run: terraform validate
       
-      # - name: Terrafrom Import
-      #   working-directory: terraform
-      #   run: terraform import 'aws_s3_bucket.s3_output_bucket' test-bucket-reverse-creation
+      - name: Terrafrom Import
+        working-directory: terraform
+        run: terraform import 'aws_s3_bucket.s3_output_bucket' test-bucket-reverse-creation
 
       - name: Terraform plan
         working-directory: terraform
