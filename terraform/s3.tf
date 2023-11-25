@@ -22,27 +22,6 @@ resource "aws_s3_bucket_ownership_controls" "bucket_ownership" {
     }
 }
 
-data "aws_iam_policy_document" "tls_enfore_policy" {
-  statement {
-
-    sid = "1"
-    principals {
-      type = "AWS"
-      identifiers = ["*"]
-    }
-    actions = [
-        "s3:*"
-    ]
-
-    effect = "Allow"
-
-    resources = [
-      aws_s3_bucket.s3_output_bucket.arn,
-      "${aws_s3_bucket.s3_output_bucket.arn}/*",
-    ]
-  }
-}
-
 resource "aws_s3_bucket_policy" "tls_enfore" {
     bucket = aws_s3_bucket.s3_output_bucket.id
     policy = data.aws_iam_policy_document.tls_enforce_policy.json
