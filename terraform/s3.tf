@@ -56,7 +56,7 @@ resource "aws_s3_bucket_policy" "tls_enforce_policy" {
                 Effect    = "Deny"
                 Principal = "*"
                 Action    = "s3:*"
-                Resources = [
+                Resource = [
                     aws_s3_bucket.s3_output_bucket.arn,
                     "${aws_s3_bucket.s3_output_bucket.arn}/*"
                     ]
@@ -71,7 +71,7 @@ resource "aws_s3_bucket_policy" "tls_enforce_policy" {
                 Effect    = "Deny"
                 Principal = "*"
                 Action    = "s3:*"
-                Resources = [
+                Resource = [
                     aws_s3_bucket.s3_output_bucket.arn,
                     "${aws_s3_bucket.s3_output_bucket.arn}/*"
                     ]
