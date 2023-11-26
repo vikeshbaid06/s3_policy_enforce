@@ -58,6 +58,6 @@ jobs:
         working-directory: terraform
         run: terraform plan -var-file terraform.tfvars --out=tfplan
 
-      # - name: Terraform apply
-      #   working-directory: terraform
-      #   run: terraform apply tfplan
+      - name: Terraform apply
+        working-directory: terraform
+        run: terraform apply tfplan
