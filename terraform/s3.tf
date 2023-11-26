@@ -43,34 +43,39 @@ data "aws_iam_policy_document" "tls_enfore_policy" {
   }
 }
 
-resource "aws_s3_bucket_policy" "prod_media_bucket" {
-    bucket = aws_s3_bucket.s3_output_bucket.id
-    policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Principal = "*"
-        Action = [
-          "s3:*",
-        ]
-        Effect = "Allow"
-        Resource = [
-            aws_s3_bucket.s3_output_bucket.arn,
-            "${aws_s3_bucket.s3_output_bucket.arn}/*"
-        ]
-      },
-      {
-        Sid = "PublicReadGetObject"
-        Principal = "*"
-        Action = [
-          "s3:GetObject",
-        ]
-        Effect   = "Allow"
-        Resource = [
-            aws_s3_bucket.s3_output_bucket.arn,
-            "${aws_s3_bucket.s3_output_bucket.arn}/*"
-        ]
-      },
-    ]
-  })
+resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+  bucket = aws_s3_bucket.s3_output_bucket.id
+  policy = data.aws_iam_policy_document.tls_enfore_policy.json
 }
+
+# resource "aws_s3_bucket_policy" "prod_media_bucket" {
+#     bucket = aws_s3_bucket.s3_output_bucket.id
+#     policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Principal = "*"
+#         Action = [
+#           "s3:*",
+#         ]
+#         Effect = "Allow"
+#         Resource = [
+#             aws_s3_bucket.s3_output_bucket.arn,
+#             "${aws_s3_bucket.s3_output_bucket.arn}/*"
+#         ]
+#       },
+#       {
+#         Sid = "PublicReadGetObject"
+#         Principal = "*"
+#         Action = [
+#           "s3:GetObject",
+#         ]
+#         Effect   = "Allow"
+#         Resource = [
+#             aws_s3_bucket.s3_output_bucket.arn,
+#             "${aws_s3_bucket.s3_output_bucket.arn}/*"
+#         ]
+#       },
+#     ]
+#   })
+# }
