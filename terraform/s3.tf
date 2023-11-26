@@ -26,10 +26,6 @@ data "aws_iam_policy_document" "tls_enfore_policy" {
   statement {
 
     sid = "1"
-    principals {
-      type = "AWS"
-      identifiers = ["*"]
-    }
     actions = [
         "s3:*"
     ]
