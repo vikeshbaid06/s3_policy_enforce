@@ -25,12 +25,13 @@ resource "aws_s3_bucket_ownership_controls" "bucket_ownership" {
 data "aws_iam_policy_document" "tls_enfore_policy" {
   statement {
 
-    sid = "1"
     actions = [
         "s3:*"
     ]
-
-    effect = "Allow"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
 
     resources = [
       aws_s3_bucket.s3_output_bucket.arn,
