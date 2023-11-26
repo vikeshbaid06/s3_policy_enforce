@@ -56,10 +56,10 @@ resource "aws_s3_bucket_policy" "tls_enforce_policy" {
                 Effect    = "Deny"
                 Principal = "*"
                 Action    = "s3:*"
-                Resource = [
-                    "${aws_s3_bucket.test_s3_bucket.arn}/*",
-                    "${aws_s3_bucket.test_s3_bucket.arn}",
-                ]
+                Resources = [
+                    aws_s3_bucket.s3_output_bucket.arn,
+                    "${aws_s3_bucket.s3_output_bucket.arn}/*"
+                    ]
                 Condition = {
                     Bool = {
                         "aws:SecureTransport" = "false"
@@ -71,10 +71,10 @@ resource "aws_s3_bucket_policy" "tls_enforce_policy" {
                 Effect    = "Deny"
                 Principal = "*"
                 Action    = "s3:*"
-                Resource = [
-                    "${aws_s3_bucket.test_s3_bucket.arn}/*",
-                    "${aws_s3_bucket.test_s3_bucket.arn}",
-                ]
+                Resources = [
+                    aws_s3_bucket.s3_output_bucket.arn,
+                    "${aws_s3_bucket.s3_output_bucket.arn}/*"
+                    ]
                 Condition = {
                     NumericLessThan = {
                         "s3:TlsVersion": 1.2
