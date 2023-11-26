@@ -5,21 +5,21 @@ resource "aws_s3_bucket" "s3_output_bucket" {
     }
 }
 
-resource "aws_s3_bucket_public_access_block" "metrics_bucket_block_public" {
+resource "aws_s3_bucket_public_access_block" "bucket_block_public" {
     bucket = aws_s3_bucket.s3_output_bucket.id
 
-    block_public_acls = false
-    block_public_policy = false
-    ignore_public_acls = false
-    restrict_public_buckets = false
+    block_public_acls = true
+    block_public_policy = true
+    ignore_public_acls = true
+    restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_ownership_controls" "bucket_ownership" {
     bucket = aws_s3_bucket.s3_output_bucket.id
-
     rule {
         object_ownership = "BucketOwnerPreferred"
     }
+    depends_on = [aws_s3_bucket_public_access_block.bucket_block_public]
 }
 
 data "aws_iam_policy_document" "tls_enfore_policy" {
@@ -43,7 +43,34 @@ data "aws_iam_policy_document" "tls_enfore_policy" {
   }
 }
 
-resource "aws_s3_bucket_policy" "tls_enfore" {
+resource "aws_s3_bucket_policy" "prod_media_bucket" {
     bucket = aws_s3_bucket.s3_output_bucket.id
-    policy = data.aws_iam_policy_document.tls_enfore_policy.json
+    policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Principal = "*"
+        Action = [
+          "s3:*",
+        ]
+        Effect = "Allow"
+        Resource = [
+            aws_s3_bucket.s3_output_bucket.arn,
+            "${aws_s3_bucket.s3_output_bucket.arn}/*"
+        ]
+      },
+      {
+        Sid = "PublicReadGetObject"
+        Principal = "*"
+        Action = [
+          "s3:GetObject",
+        ]
+        Effect   = "Allow"
+        Resource = [
+            aws_s3_bucket.s3_output_bucket.arn,
+            "${aws_s3_bucket.s3_output_bucket.arn}/*"
+        ]
+      },
+    ]
+  })
 }
