@@ -1,4 +1,4 @@
-name: Infrastructure Import using terraform
+name: Copy Object
 on:
   workflow_dispatch:
     inputs:
