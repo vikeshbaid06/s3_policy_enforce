@@ -37,4 +37,4 @@ jobs:
 
       - name: Copy object
         run: |
-          aws s3 cp s3://mytestbucketzip/DistributorPackages/secagent/  s3://testipdata/DistributorPackages/secagent/ --recursive
+          aws s3 cp s3://mytestbucketzip/DistributorPackages/secagent/  s3://testipdata/DistributorPackages/secagent/ --recursive --acl bucket-owner-full-control
