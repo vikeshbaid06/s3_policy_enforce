@@ -28,7 +28,7 @@ jobs:
       - name: get_aws_credentials_devl
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: "arn:aws:iam::875067281875:role/s3_object_copy"
+          role-to-assume: "arn:aws:iam::594869211103:role/s3_copy_bucket_object"
           aws-region: "us-east-1"
 
       - name: check identity
