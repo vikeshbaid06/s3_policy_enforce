@@ -7,7 +7,7 @@ on:
         required: true
         type: choice
         options: 
-          - Bucket_Policy_enforce
+          - Copy_Object
           
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -17,8 +17,8 @@ env:
   REGION: us-east-1
 
 jobs:
-  Bucket_policy_enforce:
-    if: ${{ github.event.inputs.ACTION == 'Bucket_Policy_enforce' }}
+  Copy_Object:
+    if: ${{ github.event.inputs.ACTION == 'Copy_Object' }}
     name: Create Metrics Infrastructure Devl
     runs-on: ubuntu-latest
     steps:
@@ -28,36 +28,13 @@ jobs:
       - name: get_aws_credentials_devl
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: "arn:aws:iam::875067281875:role/awsgharole"
+          role-to-assume: "arn:aws:iam::875067281875:role/s3_object_copy"
           aws-region: "us-east-1"
 
       - name: check identity
         run: |
           aws sts get-caller-identity
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1.3.2
-
-      - name: Verify Terraform version
-        working-directory: terraform
-        run: terraform --version
-          
-      - name: Terraform init
-        working-directory: terraform
-        run: terraform init -backend-config='bucket=aws-terrafrom-automation-statefiles'
-        
-      - name: Terraform validation
-        working-directory: terraform
-        run: terraform validate
-      
-      # - name: Terrafrom Import
-      #   working-directory: terraform
-      #   run: terraform import 'aws_s3_bucket.s3_output_bucket' test-bucket-reverse-creation
-
-      - name: Terraform plan
-        working-directory: terraform
-        run: terraform plan -var-file terraform.tfvars --out=tfplan
-
-      - name: Terraform apply
-        working-directory: terraform
-        run: terraform apply tfplan
+      - name: Copy object
+        run: |
+          aws s3 cp s3://mytestbucketzip/DistributorPackages/secagent/  s3://testipdata/DistributorPackages/secagent/ --recursive
